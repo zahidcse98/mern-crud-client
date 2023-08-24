@@ -5,10 +5,14 @@ function App() {
   const [items, setItems] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [serverName, setServerName] = useState('');
 
+  
   useEffect(() => {
     fetchItems();
+    getServerName();
   }, []);
+
   const baseURL = 'http://localhost:5000/api/items';
   const fetchItems = async () => {
     const response = await axios.get(baseURL);
@@ -16,7 +20,11 @@ function App() {
     console.log(data);
     setItems(data);
   };
-
+  const getServerName = async () => {
+    const response = await axios.get(`${baseURL}/server`)
+    console.log(response.data);
+    setServerName(response.data)
+  }
   const postItems = async (name, description) => {
     const response = await axios.post(baseURL, {name , description})
     console.log(response)
@@ -40,7 +48,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>CRUD App</h1>
+      <h1>{serverName}</h1>
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Name" value={name || ''} onChange={(e) => setName(e.target.value)} />
         <input type="text" placeholder="Description" value={description || ''} onChange={(e) => setDescription(e.target.value)} />
